@@ -1,0 +1,1 @@
+export default 'https://weatherapp-backend-phi.vercel.app';

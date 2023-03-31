@@ -1,22 +1,27 @@
-fetch('http://localhost:3000/weather')
+const backendUrl = 'https://weatherapp-backend-phi.vercel.app';
+//const backendUrl = 'http://localhost:3000';
+
+
+fetch(`${backendUrl}/weather`)
 	.then(response => response.json())
 	.then(data => {
 		if (data.weather) {
-
+			//console.log(data.weather);
 			for (let i = 0; i < data.weather.length; i++) {
 				document.querySelector('#cityList').innerHTML += `
 				<div class="cityContainer">
-				<p class="name">${data.weather[i].cityName}</p>
-				<p class="description">${data.weather[i].description}</p>
-				<img class="weatherIcon" src="images/${data.weather[i].main}.png"/>
+				<p class="name">${data.weather[i].cityWeather.cityName}</p>
+				<p class="description">${data.weather[i].cityWeather.description}</p>
+				<img class="weatherIcon" src="images/${data.weather[i].cityWeather.main}.png"/>
 				<div class="temperature">
-					<p class="tempMin">${data.weather[i].tempMin}°C</p>
+					<p class="tempMin">${data.weather[i].cityWeather.tempMin}°C</p>
 					<span>-</span>
-					<p class="tempMax">${data.weather[i].tempMax}°C</p>
-				</div>
-				<button class="deleteCity" id="${data.weather[i].cityName}">Delete</button>
-			</div>
-			`;
+					<p class="tempMax">${data.weather[i].cityWeather.tempMax
+					}°C</p >
+				</div >
+				<button class="deleteCity" id="${data.weather[i].cityWeather.cityName}">Delete</button>
+			</div >
+				`;
 			}
 			updateDeleteCityEventListener();
 		}
@@ -25,7 +30,7 @@ fetch('http://localhost:3000/weather')
 function updateDeleteCityEventListener() {
 	for (let i = 0; i < document.querySelectorAll('.deleteCity').length; i++) {
 		document.querySelectorAll('.deleteCity')[i].addEventListener('click', function () {
-			fetch(`http://localhost:3000/weather/${this.id}`, { method: 'DELETE' })
+			fetch(`${backendUrl}/weather/${this.id} `, { method: 'DELETE' })
 				.then(response => response.json())
 				.then(data => {
 					if (data.result) {
@@ -38,8 +43,7 @@ function updateDeleteCityEventListener() {
 
 document.querySelector('#addCity').addEventListener('click', function () {
 	const cityName = document.querySelector('#cityNameInput').value;
-
-	fetch('http://localhost:3000/weather', {
+	fetch(`${backendUrl}/weather`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ cityName }),
@@ -48,15 +52,15 @@ document.querySelector('#addCity').addEventListener('click', function () {
 			if (data.result) {
 				document.querySelector('#cityList').innerHTML += `
 			<div class="cityContainer">
-				<p class="name">${data.weather.cityName}</p>
-				<p class="description">${data.weather.description}</p>
-				<img class="weatherIcon" src="images/${data.weather.main}.png"/>
+				<p class="name">${data.cityWeather.cityName}</p>
+				<p class="description">${data.cityWeather.description}</p>
+				<img class="weatherIcon" src="images/${data.cityWeather.main}.png"/>
 				<div class="temperature">
-					<p class="tempMin">${data.weather.tempMin}°C</p>
+					<p class="tempMin">${data.cityWeather.tempMin}°C</p>
 					<span>-</span>
-					<p class="tempMax">${data.weather.tempMax}°C</p>
+					<p class="tempMax">${data.cityWeather.tempMax}°C</p>
 				</div>
-				<button class="deleteCity" id="${data.weather.cityName}">Delete</button>
+				<button class="deleteCity" id="${data.cityWeather.cityName}">Delete</button>
 			</div>
 					`;
 				updateDeleteCityEventListener();
